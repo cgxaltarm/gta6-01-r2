@@ -34,6 +34,7 @@ export class PlayerController {
     this.sprint = false;
     this.carHitTimer = 0;
     this.actions = { fire: false, enter: false, weapon: null };
+    this.respect = 0;
     this.load();
   }
 
@@ -148,7 +149,11 @@ export class PlayerController {
   }
 
   save() {
-    const state = { x: this.position.x, z: this.position.z, heading: this.heading, money: this.money, weapon: this.weapon, radio: this.radioStation };
+    const state = {
+      x: this.position.x, z: this.position.z, heading: this.heading,
+      money: this.money, weapon: this.weapon, radio: this.radioStation,
+      respect: Number.isFinite(this.respect) ? this.respect : 0,
+    };
     try { localStorage.setItem('velamar-save', JSON.stringify(state)); } catch {}
     this.savedAt = Date.now();
   }
@@ -159,6 +164,7 @@ export class PlayerController {
       if (state && Number.isFinite(state.x) && Number.isFinite(state.z)) {
         this.position.set(state.x, 0, state.z); this.heading = state.heading || 0;
         this.money = state.money || 250; this.weapon = state.weapon || 'Pistol'; this.radioStation = state.radio || 0;
+        this.respect = Number.isFinite(state.respect) ? state.respect : 0;
       }
     } catch {}
   }

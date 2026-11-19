@@ -20,6 +20,7 @@ export class MissionSystem {
   constructor(scene, player, seed = 1) {
     this.scene = scene;
     this.player = player;
+    this.respect = null;
     this.index = 0;
     this.elapsed = 0;
     this.deadline = 260;
@@ -79,10 +80,13 @@ export class MissionSystem {
     const chapter = this.current();
     this.completed = true;
     this.player.money += chapter.reward;
+    const respectGain = this.respect ? this.respect.onMissionComplete() : 0;
     if (this.index < STORY.length - 1) this.setMission(this.index + 1);
     else this.setMission(this.index);
     this.completed = false;
-    this.toast = `THREAD COMPLETE · +$${chapter.reward}`;
+    this.toast = respectGain
+      ? `THREAD COMPLETE · +$${chapter.reward} · +${respectGain} RESPECT`
+      : `THREAD COMPLETE · +$${chapter.reward}`;
     this.player.save();
     return true;
   }

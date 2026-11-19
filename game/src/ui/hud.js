@@ -1,5 +1,6 @@
 // HUD, minimap, title screen and narrative messages for VELAMAR.
 import { ROAD_HALF, ROAD_X, ROAD_Z, CITY_SPAN } from '../world/city-plan.js';
+import { respectLevel } from '../systems/respect.js';
 
 const STORY_TITLES = ['FIRST WHEELS', 'SUNSET DELIVERY', 'THE PICKUP', 'HEAT ON THE STRIP', 'WAREHOUSE RUN', 'COASTLINE GRAND PRIX', 'TOOLS OF THE TRADE', 'THE LAST TIDE'];
 const RADIO_STATIONS = [
@@ -30,6 +31,8 @@ export class Hud {
       radio: document.getElementById('radio'),
       garage: document.getElementById('garage'),
       title: document.getElementById('title-screen'),
+      respect: document.getElementById('respect'),
+      respectLevel: document.getElementById('respect-level'),
     };
     this.minimap = document.getElementById('minimap');
     this.ctx = this.minimap.getContext('2d');
@@ -51,7 +54,7 @@ export class Hud {
     this.titleOpen = open;
     this.el.title.style.display = open ? 'flex' : 'none';
     const hide = open ? 'none' : 'block';
-    for (const id of ['mission-card', 'weapon', 'minimap', 'controls', 'wanted', 'vehicle-readout', 'radio']) {
+    for (const id of ['mission-card', 'weapon', 'minimap', 'controls', 'wanted', 'vehicle-readout', 'radio', 'respect-meter']) {
       const node = document.getElementById(id);
       if (node) node.style.display = hide;
     }
@@ -75,6 +78,14 @@ export class Hud {
     this.setTitle(false);
     if (name === 'drive' || name === 'chase') this.el.readout.style.display = 'flex';
     if (name === 'start' || name === 'mission') this.el.readout.style.display = 'none';
+    this.updateRespect();
+  }
+
+  updateRespect() {
+    if (!this.el.respect || !this.el.respectLevel) return;
+    const points = Math.max(0, Math.floor(this.player.respect || 0));
+    this.el.respect.textContent = String(points);
+    this.el.respectLevel.textContent = respectLevel(points).toUpperCase();
   }
 
   updateMission(index = this.mission.index) {
@@ -105,6 +116,7 @@ export class Hud {
       const remaining = this.mission.remaining;
       this.el.timer.textContent = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(Math.floor(remaining % 60)).padStart(2, '0')}`;
     }
+    this.updateRespect();
     if (performance.now() > this.toastUntil && !this.shot) this.el.toastWrap.style.display = 'none';
     this.drawMinimap();
   }

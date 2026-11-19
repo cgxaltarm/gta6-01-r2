@@ -10,6 +10,7 @@ import { MissionSystem } from './systems/missions.js';
 import { CameraRig } from './systems/camera-rig.js';
 import { Input } from './systems/input.js';
 import { Hud } from './ui/hud.js';
+import { RespectSystem } from './systems/respect.js';
 import { stageScene } from './entities/shot-staging.js';
 
 const params = new URLSearchParams(location.search);
@@ -37,6 +38,9 @@ const player = new PlayerController(scene, seed);
 const traffic = new TrafficSystem(scene, player, seed);
 const pedestrians = new PedestrianSystem(scene, seed);
 const missions = new MissionSystem(scene, player, seed);
+const respect = new RespectSystem(player);
+missions.respect = respect;
+traffic.respect = respect;
 const cameraRig = new CameraRig(camera, player);
 const hud = new Hud(player, missions, traffic);
 const input = new Input(() => {
@@ -156,11 +160,36 @@ function frame(now) {
 requestAnimationFrame(frame);
 
 // Expose a tiny read-only smoke hook for browser automation and devtools, not game logic.
-window.VELAMAR = Object.freeze({
-  get state() { return { started, shot: lastShot, money: player.money, weapon: player.weapon, wanted: traffic.heat, inCar: player.inCar, mission: missions.index }; },
+window.VELAMAR = {
+  get state() {
+    return {
+      started, shot: lastShot, money: player.money, weapon: player.weapon,
+      wanted: traffic.heat, inCar: player.inCar, mission: missions.index,
+      respect: respect.points, respectLevel: respect.level,
+    };
+  },
   start: startStory,
   setShot: (name) => { const url = new URL(location.href); url.searchParams.set('shot', name); location.href = url.href; },
-});
+  completeMission() {
+    missions.complete();
+    hud.resetToast(missions.toast, 4);
+    hud.updateMission(missions.index);
+    hud.update(elapsed);
+    return this.state;
+  },
+  escapeWanted() {
+    const prev = traffic.heat;
+    traffic.setHeat(0);
+    hud.resetToast(prev > 0 ? `ESCAPED ${prev}-STAR HEAT · +60 RESPECT` : 'NO HEAT TO ESCAPE', 4);
+    hud.update(elapsed);
+    return this.state;
+  },
+  addRespect(amount = 40) {
+    respect.award(amount, 'debug');
+    hud.update(elapsed);
+    return this.state;
+  },
+};
 
 document.getElementById('new-game').addEventListener('click', startStory);
 

@@ -22,6 +22,7 @@ export class TrafficSystem {
     this.blockadeTimer = 0;
     this.lastWantedNotice = 0;
     this.dispatch = [];
+    this.respect = null;
     this.makeInitialTraffic();
   }
 
@@ -93,8 +94,10 @@ export class TrafficSystem {
   }
 
   setHeat(level) {
+    const previous = this.heat;
     const wanted = clamp(Math.round(level), 0, 5);
     if (wanted === this.heat) return;
+    if (previous > 0 && wanted === 0 && this.respect) this.respect.onEscapeWanted();
     this.heat = wanted;
     if (wanted > 0) {
       this.player.wanted = wanted;
