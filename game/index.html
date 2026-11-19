@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#f7b568">
+<title>VELAMAR — Coastline Stories</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<canvas id="world" aria-label="VELAMAR open-world coastal city"></canvas>
+<div id="vignette"></div>
+<header class="topbar"><div class="brand"><span class="sunmark">◉</span><span>VELAMAR</span><small>COASTLINE STORIES</small></div><div class="district">PACIFIC BLUFFS <span>↗</span> 08:42 PM</div><div class="wallet"><span>◆</span> $<b id="money">250</b></div></header>
+<section class="mission-card" id="mission-card"><div class="eyebrow"><i></i> STORY / <span id="chapter">01</span></div><h1 id="mission-title">FIRST WHEELS</h1><p id="objective">Find a car and make it yours.</p><div class="mission-foot"><span id="mission-status">NEW THREAD</span><span id="timer">04:20</span></div></section>
+<div class="toast" id="toast"><span>✦</span><span id="toast-text">VELAMAR — New Game</span></div>
+<div class="wanted" id="wanted"><span class="wanted-label">WANTED</span><span class="stars" id="stars">☆☆☆☆☆</span><span class="wanted-note">KEEP MOVING</span></div>
+<div class="vehicle-readout" id="vehicle-readout"><span class="speed" id="speed">000</span><span class="speed-unit">KM/H</span><span class="divider"></span><span id="vehicle-name">SOLANO GT</span></div>
+<div class="weapon"><span class="weapon-icon">⌖</span><span><small>WEAPON</small><b id="weapon">FISTS</b></span><span class="weapon-key">1</span></div>
+<div class="controls"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>MOVE</span><kbd>SHIFT</kbd><span>SPRINT</span><kbd>E</kbd><span>ENTER</span><kbd>R</kbd><span>RADIO</span></div>
+<div class="minimap-frame"><div class="map-title">VELAMAR <span>LOCAL MAP</span></div><canvas id="minimap" width="192" height="192"></canvas><div class="map-coords">28° 32′ N &nbsp; 80° 41′ W <b>● LIVE</b></div></div>
+<div class="radio" id="radio"><span>♫</span> <b>COAST FM</b><i>ON AIR</i></div>
+<div class="garage" id="garage"><b>GARAGE</b><span>◈</span><small>E · ENTER / EXIT</small></div>
+<div id="title-screen" class="title-screen"><div class="title-content"><div class="title-kicker">A CITY WITH A PULSE</div><h2>VELA<span>MAR</span></h2><p>Coastline Stories</p><button id="new-game">START YOUR STORY <b>↗</b></button><div class="title-tip">WASD TO WALK & DRIVE &nbsp; · &nbsp; E TO ENTER VEHICLE</div></div><div class="title-meta">PACIFIC BLUFFS / EST. 1987 <span>VOL. 01 — THE FIRST TIDE</span></div></div>
+<div id="crosshair">+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
