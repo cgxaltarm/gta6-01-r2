@@ -2,7 +2,7 @@
 // Packages the playable browser game and screenshot renders into the output
 // directory, then emits a deterministic dossier.json for the make.fun scorer.
 
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-game.ts';
@@ -16,10 +16,22 @@ function copyTree(src: string, dst: string): void {
   cpSync(src, dst, { recursive: true });
 }
 
-mkdirSync(outputDir, { recursive: true });
+const gameSrc = join(rootDir, 'game');
+if (!existsSync(gameSrc)) {
+  throw new Error('Missing required game/ directory');
+}
 
-copyTree(join(rootDir, 'game'), join(outputDir, 'game'));
-copyTree(join(rootDir, 'screenshots'), join(outputDir, 'screenshots'));
+const shotsSrc = join(rootDir, 'screenshots');
+mkdirSync(outputDir, { recursive: true });
+copyTree(gameSrc, join(outputDir, 'game'));
+copyTree(shotsSrc, join(outputDir, 'screenshots'));
+
+if (existsSync(shotsSrc)) {
+  const shotCount = readdirSync(shotsSrc).filter((f) => /\.(png|jpe?g)$/i.test(f)).length;
+  if (shotCount === 0) {
+    console.warn('No screenshot images found in screenshots/; dossier may be invalid.');
+  }
+}
 
 const dossier = buildDossier(outputDir, {
   text_max_bytes: 163840,
