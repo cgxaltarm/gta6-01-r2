@@ -45,9 +45,9 @@ export function stageScene(name, { scene, player, traffic, pedestrians, missions
     cameraRig.stageShot('drive', scene, traffic, missions);
   } else if (name === 'chase') {
     player.setShot('chase');
-    player.position.set(46, 0, 251);
+    player.position.set(92, 0, 251);
     player.carHeading = 0;
-    player.currentCar.position.set(46, .07, 251);
+    player.currentCar.position.set(92, .07, 251);
     player.currentCar.rotation.y = 0;
     player.walker.visible = false;
     // Two cruisers flank and trail the player, both inside the rear camera's view.
@@ -90,7 +90,7 @@ function stageParked(traffic, color, x, z, heading, driving = false) {
 function stagePolice(traffic, scene, side, distance, offsetZ, laneOffset) {
   const model = makeCar({ color: 0xffffff, police: true, seed: 313 + laneOffset });
   // The chase camera looks north along the shoreline boulevard: put the cruisers behind and beside the hero.
-  model.position.set(46 + side * laneOffset, .07, 251 - distance * 0 + offsetZ + 11 + Math.abs(laneOffset) * 1.1);
+  model.position.set(92 + side * laneOffset, .07, 251 - distance * 0 + offsetZ + 11 + Math.abs(laneOffset) * 1.1);
   model.rotation.y = 0;
   scene.add(model);
   traffic.police.push({ id: 70000 + laneOffset, axis: 'z', road: 46, direction: 1, lane: 0, distance: model.position.z, speed: 0, cruise: 0, model, sirenPhase: laneOffset });
