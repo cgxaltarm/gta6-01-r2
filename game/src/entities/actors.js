@@ -133,15 +133,15 @@ export function makeHelicopter() {
   const tail = addBox(group, shared.white, 0, .1, 2.55, .17, .17, 2.7);
   const fin = addBox(group, shared.white, 0, .4, 3.58, .13, .77, .42);
   addBox(group, dark, .08, .15, 3.72, .06, .54, .58);
-  const rotorHub = new THREE.Group(); rotorHub.position.y = .62; group.add(rotorHub);
-  addCylinder(rotorHub, shared.black, 0, 0, 0, .1, .23, 8);
+  const rotorHub = new THREE.Group(); rotorHub.position.y = .72; group.add(rotorHub);
+  addCylinder(rotorHub, shared.black, 0, -.05, 0, .13, .3, 8);
   for (let i = 0; i < 4; i++) {
-    const blade = addBox(rotorHub, dark, 0, .035, 0, .17, .045, 6.35);
+    const blade = addBox(rotorHub, dark, 0, .05, 0, .34, .22, 7.1);
     blade.rotation.y = i * Math.PI / 2;
   }
   const tailRotor = new THREE.Group(); tailRotor.position.set(.22, .28, 3.72); group.add(tailRotor);
   for (let i = 0; i < 2; i++) {
-    const blade = addBox(tailRotor, dark, 0, 0, 0, .11, .12, 1.2); blade.rotation.z = i * Math.PI / 2;
+    const blade = addBox(tailRotor, dark, 0, 0, 0, .18, .22, 1.55); blade.rotation.z = i * Math.PI / 2;
   }
   for (const side of [-1, 1]) {
     const skid = addBox(group, dark, side * .95, -.65, .1, .12, .09, 3.05);

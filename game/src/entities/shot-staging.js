@@ -64,10 +64,10 @@ export function stageScene(name, { scene, player, traffic, pedestrians, missions
       id: 70002, x: 96.1, z: 275.4, heading: -0.06, siren: 1.1,
     });
 
-    // Helicopter low and large directly in the camera's line of sight (above the road ahead)
-    // so it reads clearly as a helicopter in frame, not a distant speck outside the frustum.
+    // Helicopter far and small in the upper sky, offset to the side so the full
+    // silhouette (body, tail, rotors) reads clearly without covering the road/city.
     stageHelicopter(traffic, scene, {
-      x: 91.5, y: 7.2, z: 270.5, heading: 0.25, scale: 3.4,
+      x: 97.5, y: 11.8, z: 256, heading: 0.5, scale: 1.45,
     });
 
     cameraRig.stageShot('chase', scene, traffic, missions);
