@@ -66,7 +66,7 @@ export function stageScene(name, { scene, player, traffic, pedestrians, missions
 
     // Helicopter in the sky in front of the camera, large and clearly visible.
     stageHelicopter(traffic, scene, {
-      x: 92.5, y: 8, z: 264, heading: 0.38, scale: 1.5,
+      x: 95, y: 15, z: 268, heading: 0.35, scale: 1.6,
     });
 
     cameraRig.stageShot('chase', scene, traffic, missions);
