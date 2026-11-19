@@ -49,13 +49,15 @@ export class CameraRig {
       offset = new THREE.Vector3(4.3, 2.55, 6.9);
       fov = 55;
     } else if (name === 'drive') {
-      target = new THREE.Vector3(p.position.x, 1.45, p.position.z - 3.0);
-      offset = new THREE.Vector3(0, 4.15, 9.7);
-      fov = 60;
+      // Slight 3/4 rear angle so wheels and side of the car read clearly.
+      target = new THREE.Vector3(p.position.x, 1.25, p.position.z - 2.8);
+      offset = new THREE.Vector3(2.2, 3.45, 8.8);
+      fov = 58;
     } else if (name === 'chase') {
-      target = new THREE.Vector3(p.position.x, 2.7, p.position.z - 5.5);
-      offset = new THREE.Vector3(0, 6.4, 15.5);
-      fov = 64;
+      // Close rear chase framing: player car large, two cruisers trailing, heli ahead in sky.
+      target = new THREE.Vector3(p.position.x + 0.2, 1.65, p.position.z - 1.8);
+      offset = new THREE.Vector3(-1.6, 3.55, 9.2);
+      fov = 56;
     } else if (name === 'mission') {
       target = new THREE.Vector3(p.position.x, 2.2, p.position.z - 4.5);
       offset = new THREE.Vector3(8.5, 4.6, 12.5);

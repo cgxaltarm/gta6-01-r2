@@ -45,15 +45,30 @@ export function stageScene(name, { scene, player, traffic, pedestrians, missions
     cameraRig.stageShot('drive', scene, traffic, missions);
   } else if (name === 'chase') {
     player.setShot('chase');
-    player.position.set(92, 0, 251);
+    // Player car on the boulevard, fleeing north (-z) with the camera behind and above.
+    player.position.set(92, 0, 274);
     player.carHeading = 0;
-    player.currentCar.position.set(92, .07, 251);
+    player.currentCar.position.set(92, .07, 274);
     player.currentCar.rotation.y = 0;
     player.walker.visible = false;
-    // Two cruisers flank and trail the player, both inside the rear camera's view.
-    stagePolice(traffic, scene, 1, .67, 0, 1.5);
-    stagePolice(traffic, scene, -1, .67, 0, 9.1);
-    stageHelicopter(traffic, scene, player, 47, 26, 33);
+    // Wanted state must be consistent: 5 stars in HUD and in game state.
+    player.wanted = 5;
+    traffic.heat = 5;
+    traffic.lastWantedNotice = 1e9;
+
+    // Two police cruisers trail close behind/sides of the player, both in frame.
+    stagePolice(traffic, scene, {
+      id: 70001, x: 88.7, z: 273.2, heading: 0.08, siren: 0.2,
+    });
+    stagePolice(traffic, scene, {
+      id: 70002, x: 96.1, z: 275.4, heading: -0.06, siren: 1.1,
+    });
+
+    // Helicopter in the sky in front of the camera, large and clearly visible.
+    stageHelicopter(traffic, scene, {
+      x: 89.8, y: 12.5, z: 261.5, heading: 0.38, scale: 2.1,
+    });
+
     cameraRig.stageShot('chase', scene, traffic, missions);
   } else if (name === 'mission') {
     player.setShot('mission');
@@ -87,20 +102,19 @@ function stageParked(traffic, color, x, z, heading, driving = false) {
   traffic.traffic.push({ id: 90000 + color, axis: 'z', road: x, direction: 1, lane: 0, distance: z, speed: 0, cruise: 0, model, color });
 }
 
-function stagePolice(traffic, scene, side, distance, offsetZ, laneOffset) {
-  const model = makeCar({ color: 0xffffff, police: true, seed: 313 + laneOffset });
-  // The chase camera looks north along the shoreline boulevard: put the cruisers behind and beside the hero.
-  model.position.set(92 + side * laneOffset, .07, 251 - distance * 0 + offsetZ + 11 + Math.abs(laneOffset) * 1.1);
-  model.rotation.y = 0;
+function stagePolice(traffic, scene, { id, x, z, heading = 0, siren = 0 }) {
+  const model = makeCar({ color: 0xffffff, police: true, seed: id });
+  model.position.set(x, .07, z);
+  model.rotation.y = heading;
   scene.add(model);
-  traffic.police.push({ id: 70000 + laneOffset, axis: 'z', road: 46, direction: 1, lane: 0, distance: model.position.z, speed: 0, cruise: 0, model, sirenPhase: laneOffset });
+  traffic.police.push({ id, axis: 'z', road: 92, direction: 1, lane: 0, distance: z, speed: 0, cruise: 0, model, sirenPhase: siren });
 }
 
-function stageHelicopter(traffic, scene, player, x, y, z) {
+function stageHelicopter(traffic, scene, { x, y, z, heading = 0.2, scale = 1.6 }) {
   const model = makeHelicopter();
-  model.position.set(58, 34, 328);
-  model.rotation.y = .16;
-  model.scale.setScalar(1.35);
+  model.position.set(x, y, z);
+  model.rotation.y = heading;
+  model.scale.setScalar(scale);
   scene.add(model);
   traffic.helicopter = { model, phase: .3, orbit: 0 };
 }
