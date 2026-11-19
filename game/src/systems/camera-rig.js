@@ -56,8 +56,8 @@ export class CameraRig {
     } else if (name === 'chase') {
       // Chase framing tilted up so sky fills the upper frame and the helicopter is clearly visible,
       // while keeping player car large and trailing police in view.
-      target = new THREE.Vector3(p.position.x + 0.1, 3.15, p.position.z - 1.0);
-      offset = new THREE.Vector3(-1.3, 2.6, 9.1);
+      target = new THREE.Vector3(p.position.x + 0.1, 3.25, p.position.z - 0.8);
+      offset = new THREE.Vector3(-1.2, 2.45, 9.4);
       fov = 58;
     } else if (name === 'mission') {
       target = new THREE.Vector3(p.position.x, 2.2, p.position.z - 4.5);
