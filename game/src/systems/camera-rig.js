@@ -54,10 +54,11 @@ export class CameraRig {
       offset = new THREE.Vector3(2.2, 3.45, 8.8);
       fov = 58;
     } else if (name === 'chase') {
-      // Close rear chase framing: player car large, two cruisers trailing, heli ahead in sky.
-      target = new THREE.Vector3(p.position.x + 0.2, 1.65, p.position.z - 1.8);
-      offset = new THREE.Vector3(-1.6, 3.55, 9.2);
-      fov = 56;
+      // Chase framing tilted up so sky fills the upper frame and the helicopter is clearly visible,
+      // while keeping player car large and trailing police in view.
+      target = new THREE.Vector3(p.position.x + 0.1, 3.15, p.position.z - 1.0);
+      offset = new THREE.Vector3(-1.3, 2.6, 9.1);
+      fov = 58;
     } else if (name === 'mission') {
       target = new THREE.Vector3(p.position.x, 2.2, p.position.z - 4.5);
       offset = new THREE.Vector3(8.5, 4.6, 12.5);
