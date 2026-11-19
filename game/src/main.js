@@ -47,6 +47,47 @@ const input = new Input(() => {
   if (hud.titleOpen) startStory();
 });
 
+const weaponWheel = document.getElementById('weapon-wheel');
+const weaponSegments = weaponWheel ? [...weaponWheel.querySelectorAll('.weapon-segment')] : [];
+let weaponWheelOpen = false;
+
+function refreshWeaponWheel() {
+  if (!weaponWheel) return;
+  weaponWheel.classList.toggle('open', weaponWheelOpen);
+  weaponWheel.setAttribute('aria-hidden', weaponWheelOpen ? 'false' : 'true');
+  for (const segment of weaponSegments) {
+    segment.classList.toggle('active', segment.dataset.weapon === player.weapon);
+  }
+}
+
+function openWeaponWheel() {
+  if (shotMode || weaponWheelOpen) return;
+  weaponWheelOpen = true;
+  refreshWeaponWheel();
+}
+
+function closeWeaponWheel() {
+  if (!weaponWheelOpen) return;
+  weaponWheelOpen = false;
+  refreshWeaponWheel();
+}
+
+function selectWeapon(name) {
+  if (name === 'Fists') player.setWeapon(0);
+  else if (name === 'Pistol') player.setWeapon(1);
+  else if (name === 'SMG') player.setWeapon(2);
+  refreshWeaponWheel();
+  hud.update(elapsed);
+}
+
+for (const segment of weaponSegments) {
+  segment.addEventListener('click', (event) => {
+    event.preventDefault();
+    selectWeapon(segment.dataset.weapon);
+    closeWeaponWheel();
+  });
+}
+
 let started = false;
 let paused = false;
 let elapsed = 0;
@@ -124,6 +165,22 @@ function update(dt) {
     return;
   }
   if (!shotMode) {
+    if (input.justPressed('q')) openWeaponWheel();
+    if (weaponWheelOpen) {
+      if (input.justPressed('escape')) closeWeaponWheel();
+      if (input.justReleased('q')) closeWeaponWheel();
+      if (input.justPressed('1')) { selectWeapon('Fists'); closeWeaponWheel(); }
+      if (input.justPressed('2')) { selectWeapon('Pistol'); closeWeaponWheel(); }
+      if (input.justPressed('3')) { selectWeapon('SMG'); closeWeaponWheel(); }
+      // Keep world running but block movement/weapon actions while wheel is open.
+      traffic.update(dt, elapsed);
+      pedestrians.update(dt, elapsed);
+      missions.update(dt, elapsed);
+      cameraRig.update(dt, input);
+      hud.update(elapsed);
+      return;
+    }
+
     const actions = player.update(dt, input, world, traffic, elapsed);
     syncActions(actions);
     traffic.update(dt, elapsed);
@@ -166,6 +223,7 @@ window.VELAMAR = {
       started, shot: lastShot, money: player.money, weapon: player.weapon,
       wanted: traffic.heat, inCar: player.inCar, mission: missions.index,
       respect: respect.points, respectLevel: respect.level,
+      weaponWheelOpen,
     };
   },
   start: startStory,
@@ -189,6 +247,9 @@ window.VELAMAR = {
     hud.update(elapsed);
     return this.state;
   },
+  openWeaponWheel() { openWeaponWheel(); hud.update(elapsed); return this.state; },
+  closeWeaponWheel() { closeWeaponWheel(); hud.update(elapsed); return this.state; },
+  selectWeapon(name) { selectWeapon(name); return this.state; },
 };
 
 document.getElementById('new-game').addEventListener('click', startStory);
